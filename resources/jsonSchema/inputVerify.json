@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://json-schema.org/jsonld/inputVerify.json#",
+    "title": "Input Verification Engine",
+    "description": "Schema of input for the Verification Engine",
+    "type": "object",
+    "properties": {
+        "flow": { 
+            "oneOf": [
+                {"$ref": "http://json-schema.org/jsonld/flowSchema.json#" },
+                {"type": "string",
+                    "format": "uri" }
+            ]
+		}
+    },
+    "required": [ "flow"]
+}

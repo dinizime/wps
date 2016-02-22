@@ -1,0 +1,21 @@
+<And>
+	<Or>
+		<PropertyIsEqualTo>
+			<PropertyName>type</PropertyName>
+			<Literal>Police Station</Literal>
+		</PropertyIsEqualTo>
+		<PropertyIsEqualTo>
+			<PropertyName>type</PropertyName>
+			<Literal> Fire Brigade </Literal>
+		</PropertyIsEqualTo>
+	</Or>
+	<DWithin>
+		<PropertyName>geom</PropertyName>
+		<gml:Point>
+			<gml:coordinates>125.6 10.1</gml:coordinates>
+		</gml:Point>
+		<Distance>2000</Distance>
+	</Dwithin>
+</And>
+
+

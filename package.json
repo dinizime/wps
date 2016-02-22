@@ -1,0 +1,42 @@
+{
+  "name": "wpsjs",
+  "version": "1.0.0",
+  "description": "A simple implementation of a RESTful JSON-oriented OGC Web Processing Service using Node.js",
+  "main": "localhost:1337",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dinizime/wpsjs.git"
+  },
+  "keywords": [
+    "WPS",
+    "OGC"
+  ],
+  "author": "Felipe Diniz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dinizime/wpsjs/issues"
+  },
+  "homepage": "https://github.com/dinizime/wpsjs#readme",
+  "dependencies": {
+    "async": "^1.4.2",
+    "body-parser": "~1.13.2",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "jsts": "^0.16.0",
+    "mongoose": "^4.1.11",
+    "morgan": "~1.6.1",
+    "node-uuid": "^1.4.3",
+    "request": "^2.65.0",
+    "serve-favicon": "^2.3.0",
+    "strongly-connected-components": "^1.0.1",
+    "thenBy.js": "git+https://git@github.com/Teun/thenBy.js.git",
+    "turf-meta": "^1.0.2",
+    "tv4": "^1.2.7",
+    "valid-url": "^1.0.9",
+    "voronoi": "^1.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "wps": "http://example.com/wps/",
+    "outputList": "wps:outputList",
+    "passed": "wps:passed",
+    "failed": "wps:failed"
+}

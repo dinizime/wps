@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://json-schema.org/jsonld/flowSchema.json#",
+    "title": "Flow",
+    "description": "Schema of workflow representation",
+    "type": "object",
+    "properties": {
+        "tasks": {
+                    "type": "array",
+                    "items": [{
+                    	"type": "object",
+						"properties": {
+							"@id": { "type": "string"},
+							"@type": {"enum": ["task"]},
+							"name": { "type": "string" },
+							"inputs": {
+								"type": "array",
+								"items": {"type": "string"}
+							},
+							"outputs": {
+								"type": "array",
+								"items": {"type": "string"}
+							}
+						},
+						"oneOf": [
+							{"properties": {
+								"type": {"enum": ["Literal"]},
+								"value": {"type": "any"}
+							},
+							"required": ["type","value"]
+							},
+							{"properties": 
+								{"type": {"enum": ["WFS","WPS"]},
+								"url": { "type": "string",
+										"format": "uri" }},
+							 "required": ["type", "url"]
+							},
+							{"properties": {
+								"type": {"enum": ["Subgraph"]}
+							},
+							"required": ["type","workflow"]
+							}
+						],	
+						"required": ["@id", "inputs", "outputs"]
+					}]
+        },
+        "sequenceFlows": {
+                    "type": "array",
+                    "items": [{ 
+                    	"type": "object",
+                    	"properties": {
+							"from": { "type": "string" },
+							"to": { "type": "string" },
+							"fromPort": { "type": "string" },
+							"toPort": { "type": "string" }
+                    	},
+						"required": ["from", "to", "fromPort", "toPort"]
+					}]
+        }
+    },
+    "required": [ "tasks" , "sequenceFlows"]
+}

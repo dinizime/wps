@@ -1,0 +1,18 @@
+{
+    "wps": "http://example.com/wps/",
+    "job": "wps:job",
+    "status": { "@id": "wps:status/", "@type": "@id" },
+    "jobID": "@id",
+    "expirationDate": "wps:expirationDate/",
+    "estimatedCompletion": "wps:estimatedCompletion/",
+    "nextPoll": "wps:nextPoll",
+    "percentComplete": "wps:percentComplete/",
+    "resultsUrl": { "@id": "wps:resultsUrl/", "@type": "@id" },
+    "Succeeded": "status:succeeded",
+    "Failed": "status:failed",
+    "Accepted": "status:accepted",
+    "Running": "status:running",
+    "orchestrationStatus": "wps:orchestrationStatus/"
+}
+
+

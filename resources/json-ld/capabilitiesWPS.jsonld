@@ -1,0 +1,646 @@
+{
+	"@context": {
+		"@language": "en",
+		"ows": "http://www.opengis.net/ows/1.1/",
+		"keywords": {"@id": "ows:keywords", "@container": "@set"},
+		"providerSite": {"@id": "ows:providerSite", "@type": "@id"},
+		"onlineResource": {"@id": "ows:onlineResource", "@type": "@id"},
+		"serviceType": {"@id": "ows:serviceType", "@type": "@id"},
+		"wfs": "http://www.example.com/wfs/",
+		"wps": "http://www.example.com/wps/",
+		"csw": "http://www.example.com/csw/",
+		"featureType": "wfs:featureType",
+		"process": "wps:featureType",
+		"geojson": "http://ld.geojson.org/vocab#",
+		"bbox": "geojson:bbox",
+		"inputFormat": "http://www.example.com/rest/inputFormat",
+		"hydra": "http://www.w3.org/ns/hydra/core#",
+		"ApiDocumentation": "hydra:ApiDocumentation",
+		"property": {
+			"@id": "hydra:property",
+			"@type": "@id"
+		},
+		"readonly": "hydra:readonly",
+		"writeonly": "hydra:writeonly",
+		"supportedClass": "hydra:supportedClass",
+		"supportedProperty": "hydra:supportedProperty",
+		"supportedOperation": "hydra:supportedOperation",
+		"method": "hydra:method",
+		"expects": {
+			"@id": "hydra:expects",
+			"@type": "@id"
+		},
+		"returns": {
+			"@id": "hydra:returns",
+			"@type": "@id"
+		},
+		"statusCodes": "hydra:statusCodes",
+		"code": "hydra:statusCode",
+		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		"label": "rdfs:label",
+		"description": "rdfs:comment",
+		"domain": {
+			"@id": "rdfs:domain",
+			"@type": "@id"
+		},
+		"range": {
+			"@id": "rdfs:range",
+			"@type": "@id"
+		},
+		"subClassOf": {
+			"@id": "rdfs:subClassOf",
+			"@type": "@id"
+		}
+	},
+	"@id": "http://localhost:3001/wps/capabilities",
+	"@type": "ApiDocumentation",
+	"entryPoint": "http://localhost:3001/wps/",
+	"ows:serviceIdentification": {
+		"ows:title": "WPS RESTful Implementation",
+		"ows:abstract": "Prototype implementation of a RESTful WPS based on JSON-LD",
+		"keywords": ["JSON", "Netherlands"],
+		"serviceType": "wps",
+		"ows:serviceTypeVersion": "2.0.2",
+		"ows:fees": "None",
+		"ows:accessConstraints": "None"
+	},
+	"ows:serviceProvider": {
+		"ows:providerName": "ITC",
+		"providerSite": "http://www.itc.nl",
+		"ows:serviceContact": {
+			"ows:individualName": "Felipe Diniz",
+			"ows:positionName": "Msc student",
+			"ows:contactInfo": {
+				"ows:phone": {
+					"ows:voice": "",
+					"ows:facsimile": ""
+				},
+				"ows:address": {
+					"ows:deliveryPoint": "Hengelosestraat 99",
+					"ows:city": "Enschede",
+					"ows:administrativeArea": "Overijssel",
+					"ows:postalCode": "7514 AE",
+					"ows:country": "The Netherlands",
+					"ows:eletronicEmailAddress": "f.decarvalhodiniz@student.utwente.nl"
+				},
+				"onlineResource": "",
+				"ows:hoursOfService": "24x7",
+				"ows:contactInstructions": "Email Felipe with any questions about the prototype."
+			},
+			"ows:role": "PointOfContact"
+		}
+	},
+	"supportedClass": [
+		{
+		"@id": "http://localhost:3000/wps/buffer/jobs",
+		"@type": ["hydra:Class", "process"],
+		"subClassOf": null,
+		"ows:name": "buffer",
+		"ows:title": "Buffer",
+		"ows:abstract": "Buffer operation based on JSTS",
+		"keywords": ["buffer"],
+        "inputTypes": {
+            "features": {
+                "type": {"#set": {"#record": {"geom": "Geometry"}}},
+                "required": true,
+                "unique": true
+            },
+            "distance": {
+                "type": "Real",
+                "required": true,
+                "unique": true
+            },
+            "unit": {
+                "type": "String",
+                "required": false,
+                "unique": true,
+                "default": "meters"
+            }
+        },
+        "outputTypes": {
+            "buffered": {
+                "typePropagation": {"#addattrs": [{"#typeof": "features"},{"#record": {"geom":{"#union": ["MultiPolygon", "Polygon"]}}}]},
+                "type": {"#set": {"#record": {"geom": {"#union": ["MultiPolygon", "Polygon"]}}}}
+            }
+        },
+		"ows:metadata": "",
+		"supportedOperation": [
+			{
+			"@type": "hydra:Operation",
+			"method": "POST",
+			"label": "Creates a job for Buffer",
+			"description": null,
+			"inputFormat": "application/ld+json",
+            "preCondition": {"#and": [
+                {"#in": ["unit", {"#literal": ["miles", "kilometers", "degrees", "radians"]}]},
+                {"#gt": ["distance", {"#literal": 0}]},
+                {"#eq": ["features.geom.crs", {"#literal": "http://www.opengis.net/def/crs/EPSG/0/4326"}]},
+                {"#eq": ["features.geom.dimension", {"#literal": ["x","y"]}]}
+            ]},                    
+            "postCondition": {"#and": [
+                {"#eq": ["buffered.geom.crs", {"#literal": "http://www.opengis.net/def/crs/EPSG/0/4326"}]},
+                {"#eq": ["buffered.geom.dimension", {"#literal": ["x","y"]}]}
+            ]},
+			"statusCodes": [
+				{
+				"code": 415,
+				"description": "If the input is an unsupported Media Type"
+				},
+				{
+				"code": 422,
+				"description": "If the input is invalid against the JSON-Schema"
+				},
+				{
+				"code": 202,
+				"description": "Job Created"
+				}
+			],
+			"inputs":[
+				{
+					"ows:title": "features",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/features",
+					"@type": "complexData",
+					"ows:formats": ["application/ext.geo+json"]
+				},
+				{
+					"ows:title": "distance",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/distance",
+					"@type": "literalData",
+					"ows:formats": ["text/plain"]
+				},
+				{
+					"ows:title": "unit",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/unit",
+					"@type": "literalData",
+					"ows:formats": ["text/plain"]
+				}			
+			],
+			"outputs": [
+				{
+					"ows:title": "buffered",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/buffered",
+					"@type": "complexData",
+					"ows:formats": ["text/html", "application/ext.geo+json"]
+				}					
+			]
+			}
+		]
+		},
+		{
+		"@id": "http://localhost:3000/wps/aggregatecount/jobs",
+		"@type": ["hydra:Class", "process"],
+		"subClassOf": null,
+		"ows:name": "aggregatecount",
+		"ows:title": "Aggregate Count",
+		"ows:abstract": "Aggregate Count operation",
+        "inputTypes": {
+            "reference": {
+                "type": {"#set": {"#record": {"geom": {"#union": ["Polygon", "MultiPolygon"]}}}},
+                "required": true,
+                "unique": true
+            },
+            "features": {
+                "type": {"#set": {"#record": {"geom": "Geometry"}}},
+                "required": true,
+                "unique": true
+            }
+        },
+        "outputTypes": {
+            "aggregate": {
+                "typePropagation": {"#addattrs": [{"#typeof": "reference"}, {"#record": {"count":"Integer"}}]},
+                "type": {"#set": {"#record": {"geom": {"#union": ["Polygon", "MultiPolygon"]}, "count": "Integer"}}}
+            }
+        },
+		"keywords": ["Aggregate Count"],
+		"ows:metadata": "",
+		"supportedOperation": [
+			{
+			"@type": "hydra:Operation",
+			"method": "POST",
+			"label": "Creates a job for Aggregate Count",
+			"description": null,
+			"inputFormat": "application/ld+json",
+            "preCondition": {"#and": [
+                {"#eq": ["features.geom.crs", "reference.geom.crs"]},
+                {"#eq": ["features.geom.dimension", {"#literal": ["x","y"]}]},
+                {"#eq": ["reference.geom.dimension", {"#literal": ["x","y"]}]}
+            ]},                    
+            "postCondition": {"#and": [
+                {"#eq": ["aggregate.geom.crs", "reference.geom.crs"]},
+                {"#eq": ["aggregate.geom.bbox", "reference.geom.bbox"]},
+                {"#eq": ["aggregate.geom.dimension", {"#literal": ["x","y"]}]},
+                {"#eq": ["aggregate.geom.bboxCrs", "reference.geom.bboxCrs"]},
+                {"#eq": ["aggregate.geom.bboxFormat", "reference.geom.bboxFormat"]},
+                {"#gte": ["aggregate.count", {"#literal": 0}]}
+            ]},
+			"statusCodes": [
+				{
+				"code": 415,
+				"description": "If the input is an unsupported Media Type"
+				},
+				{
+				"code": 422,
+				"description": "If the input is invalid against the JSON-Schema"
+				},
+				{
+				"code": 202,
+				"description": "Job Created"
+				}
+			],
+			"inputs":[
+				{
+					"ows:title": "features",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/features",
+					"@type": "complexData",
+					"ows:formats": ["application/ext.geo+json"]
+				},
+				{
+					"ows:title": "reference",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/reference",
+					"@type": "complexData",
+					"ows:formats": ["application/ext.geo+json"]
+				}		
+			],
+			"outputs": [
+				{
+					"ows:title": "aggregate",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/aggregate",
+					"@type": "complexData",
+					"ows:formats": ["text/html", "application/ext.geo+json"]
+				}					
+			]
+			}
+		]
+		},
+		{
+		"@id": "http://localhost:3000/wps/intersects/jobs",
+		"@type": ["hydra:Class", "process"],
+		"subClassOf": null,
+		"ows:name": "intersects",
+		"ows:title": "Intersects",
+		"ows:abstract": "Intersects operation based on JSTS",
+		"keywords": ["Intersects"],
+        "inputTypes": {
+            "filter": {
+                "type": {"#set": {"#record": {"geom": "Geometry"}}},
+                "required": true,
+                "unique": true
+            },
+            "features": {
+                "type": {"#set": {"#record": {"geom": "Geometry"}}},
+                "required": true,
+                "unique": true
+            }
+        },
+        "outputTypes": {
+            "passed": {
+                "typePropagation": {"#typeof": "features"},
+                "type": {"#set": {"#record": {"geom": "Geometry"}}}
+            },
+            "failed": {
+                "typePropagation": {"#typeof": "features"},
+                "type": {"#set": {"#record": {"geom": "Geometry"}}}
+            }
+        },
+		"ows:metadata": "",
+		"supportedOperation": [
+			{
+			"@type": "hydra:Operation",
+			"method": "POST",
+			"label": "Creates a job for Intersects",
+			"description": null,
+			"inputFormat": "application/ld+json",
+            "preCondition": {"#and": [
+                {"#eq": ["features.geom.crs", "filter.geom.crs"]},
+                {"#eq": ["features.geom.dimension", {"#literal": ["x","y"]}]},
+                {"#eq": ["filter.geom.dimension", {"#literal": ["x","y"]}]}
+            ]},                    
+            "postCondition": {"#and": [
+                {"#eq": ["passed.geom.crs", "features.geom.crs"]},
+                {"#eq": ["failed.geom.crs", "features.geom.crs"]},
+                {"#eq": ["passed.geom.dimension", {"#literal": ["x","y"]}]},
+                {"#eq": ["failed.geom.dimension", {"#literal": ["x","y"]}]},
+                {"#within": ["passed.geom.bbox", "filter.geom.bbox"]},
+                {"#within": ["failed.geom.bbox", "features.geom.bbox"]}
+            ]},
+			"statusCodes": [
+				{
+				"code": 415,
+				"description": "If the input is an unsupported Media Type"
+				},
+				{
+				"code": 422,
+				"description": "If the input is invalid against the JSON-Schema"
+				},
+				{
+				"code": 202,
+				"description": "Job Created"
+				}
+			],
+			"inputs":[
+				{
+					"ows:title": "features",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/features",
+					"@type": "complexData",
+					"ows:formats": ["application/ext.geo+json"]
+				},
+				{
+					"ows:title": "filter",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/filter",
+					"@type": "complexData",
+					"ows:formats": ["application/ext.geo+json"]
+				}			
+			],
+			"outputs": [
+				{
+					"ows:title": "passed",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/intersects/passed",
+					"@type": "complexData",
+					"ows:formats": ["text/html", "application/ext.geo+json"]
+				},
+				{
+					"ows:title": "failed",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/intersects/failed",
+					"@type": "complexData",
+					"ows:formats": ["text/html", "application/ext.geo+json"]
+				}				
+			]
+			}
+		]
+		},
+		{
+		"@id": "http://localhost:3000/wps/bbox/jobs",
+		"@type": ["hydra:Class", "process"],
+		"subClassOf": null,
+		"ows:name": "bbox",
+		"ows:title": "BBOX",
+		"ows:abstract": "BBOX operation based on Turf.js",
+        "inputTypes": {
+            "features": {
+                "type": {"#set": {"#record": {"geom": "Geometry"}}},
+                "required": true,
+                "unique": true
+            }
+        },
+        "outputTypes": {
+            "bbox": {
+                "typePropagation": "BBOX",
+                "type": "BBOX"
+            }
+        },
+		"keywords": ["BBOX"],
+		"ows:metadata": "",
+		"supportedOperation": [
+			{
+			"@type": "hydra:Operation",
+			"method": "POST",
+			"label": "Creates a job for BBOX",
+			"description": null,
+			"inputFormat": "application/ld+json",
+            "preCondition": null,                   
+            "postCondition": {"#and": [
+                {"#eq": ["bbox.dimension", "features.geom.dimension"]},
+                {"#eq": ["bbox.crs", "features.geom.crs"]},
+                {"#eq": ["bbox.format", {"#literal": "GeoJSON"}]}
+            ]},
+			"statusCodes": [
+				{
+				"code": 415,
+				"description": "If the input is an unsupported Media Type"
+				},
+				{
+				"code": 422,
+				"description": "If the input is invalid against the JSON-Schema"
+				},
+				{
+				"code": 202,
+				"description": "Job Created"
+				}
+			],
+			"inputs":[
+				{
+					"ows:title": "features",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/features",
+					"@type": "complexData",
+					"ows:formats": ["application/ext.geo+json"]
+				}			
+			],
+			"outputs": [
+				{
+					"ows:title": "bbox",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/bbox",
+					"@type": "bbox",
+					"ows:formats": "application/ld+json"
+				}					
+			]
+			}
+		]
+		},
+		{
+		"@id": "http://localhost:3000/wps/voronoi/jobs",
+		"@type": ["hydra:Class", "process"],
+		"subClassOf": null,
+		"ows:name": "voronoi",
+		"ows:title": "Voronoi",
+		"ows:abstract": "Voronoi operation",
+		"keywords": ["Voronoi"],
+        "inputTypes": {
+            "bbox": {
+                "type": "BBOX",
+                "required": true,
+                "unique": true
+            },
+            "features": {
+                "type": {"#set": {"#record": {"geom": "Point"}}},
+                "required": true,
+                "unique": true
+            }
+        },
+        "outputTypes": {
+            "voronoi": {
+                "typePropagation": {"#addattrs": [{"#typeof": "features"},{"#record": {"geom": "Polygon"}}]},
+                "type": {"#set": {"#record": {"geom": "Polygon"}}}
+            }
+        },
+		"ows:metadata": "",
+		"supportedOperation": [
+			{
+			"@type": "hydra:Operation",
+			"method": "POST",
+			"label": "Creates a job for Voronoi",
+			"description": null,
+			"inputFormat": "application/ld+json",
+            "preCondition": {"#and": [
+                {"#eq": ["bbox.crs", "features.geom.crs"]},
+                {"#eq": ["features.geom.dimension", {"#literal": ["x","y"]}]},
+                {"#eq": ["bbox.format", {"#literal": "GeoJSON"}]},
+                {"#eq": ["bbox.dimension", {"#literal": ["x","y"]}]},
+                {"#within": ["features.geom.bbox", "bbox"]}
+            ]},                    
+            "postCondition": {"#and": [
+                {"#eq": ["voronoi.geom.crs", "features.geom.crs"]},
+                {"#eq": ["voronoi.geom.bbox", "bbox"]},
+                {"#eq": ["voronoi.geom.dimension", {"#literal": ["x","y"]}]},
+                {"#eq": ["voronoi.geom.bboxCrs", "features.geom.bboxCrs"]},
+                {"#eq": ["voronoi.geom.bboxFormat", "features.geom.bboxFormat"]}
+            ]},
+			"statusCodes": [
+				{
+				"code": 415,
+				"description": "If the input is an unsupported Media Type"
+				},
+				{
+				"code": 422,
+				"description": "If the input is invalid against the JSON-Schema"
+				},
+				{
+				"code": 202,
+				"description": "Job Created"
+				}
+			],
+			"inputs":[
+				{
+					"ows:title": "features",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/features",
+					"@type": "complexData",
+					"ows:formats": ["application/ext.geo+json"]
+				},
+				{
+					"ows:title": "bbox",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/bbox",
+					"@type": "bbox",
+					"ows:formats": ["application/ld+json"]
+				}		
+			],
+			"outputs": [
+				{
+					"ows:title": "voronoi",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/voronoi",
+					"@type": "complexData",
+					"ows:formats": ["text/html", "application/ext.geo+json"]
+				}					
+			]
+			}
+		]
+		},
+		{
+		"@id": "http://localhost:3000/wps/orchestration/jobs",
+		"@type": ["hydra:Class", "process"],
+		"subClassOf": null,
+		"ows:name": "orchestration",
+		"ows:title": "Orchestration",
+		"ows:abstract": "Orchestration operation",
+		"keywords": ["Orchestration"],
+		"ows:metadata": "",
+		"supportedOperation": [
+			{
+			"@type": "hydra:Operation",
+			"method": "POST",
+			"label": "Creates a job for Orchestration",
+			"description": null,
+			"inputFormat": "application/ld+json",
+			"statusCodes": [
+				{
+				"code": 415,
+				"description": "If the input is an unsupported Media Type"
+				},
+				{
+				"code": 422,
+				"description": "If the input is invalid against the JSON-Schema"
+				},
+				{
+				"code": 202,
+				"description": "Job Created"
+				}
+			],
+			"inputs":[
+				{
+					"ows:title": "flow",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/flow",
+					"@type": "complexData",
+					"ows:formats": ["application/ld+json"]
+				}			
+			],
+			"outputs": [
+				{
+					"ows:title": "results",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/orchestration/results",
+					"@type": "complexData",
+					"ows:formats": ["application/ld+json"]
+				}					
+			]
+			}
+		]
+		},
+		{
+		"@id": "http://localhost:3000/wps/verify/jobs",
+		"@type": ["hydra:Class", "process"],
+		"subClassOf": null,
+		"ows:name": "verify",
+		"ows:title": "Verify",
+		"ows:abstract": "Verification operation",
+		"keywords": ["Verify"],
+		"ows:metadata": "",
+		"supportedOperation": [
+			{
+			"@type": "hydra:Operation",
+			"method": "POST",
+			"label": "Creates a job for Verify",
+			"description": null,
+			"inputFormat": "application/ld+json",
+			"statusCodes": [
+				{
+				"code": 415,
+				"description": "If the input is an unsupported Media Type"
+				},
+				{
+				"code": 422,
+				"description": "If the input is invalid against the JSON-Schema"
+				},
+				{
+				"code": 202,
+				"description": "Job Created"
+				}
+			],
+			"inputs":[
+				{
+					"ows:title": "flow",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/flow",
+					"@type": "complexData",
+					"ows:formats": ["application/ld+json"]
+				}			
+			],
+			"outputs": [
+				{
+					"ows:title": "results",
+					"ows:abstract": "",
+					"@id": "http://www.example.com/wps/verify/results",
+					"@type": "complexData",
+					"ows:formats": ["application/ld+json"]
+				}					
+			]
+			}
+		]
+		}
+	]
+}

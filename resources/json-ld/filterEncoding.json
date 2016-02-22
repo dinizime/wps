@@ -1,0 +1,16 @@
+{
+    "$and": [
+        {"$or": [
+            {"type": {"$eq": "Police Station"}},
+            {"type": {"$eq": "Fire Brigade"}}
+        ]},
+        {"geom": {"$dWithin": {
+                    "geometry": {"type": "Point", "coordinates": [125.6, 10.1]},
+                    "distance": 2000}
+         }}
+     ]
+}
+
+
+
+

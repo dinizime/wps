@@ -1,0 +1,52 @@
+{
+  "@context":{
+    "orchestration": "http://example.com/orchestration/",
+    "flow": "orchestration:flow/",
+    "task": "orchestration:task/",
+    "output": "orchestration:output/",
+    "input": "orchestration:input/",
+    "tasks": {"@id": "orchestration:tasks/", "@container": "@set"},
+    "sequenceFlows": {"@id": "orchestration:sequenceFlows/", "@container": "@set"},
+    "id": "orchestration:id/",
+    "name": "orchestration:name/",    
+    "type": {"@id": "orchestration:type/", "@type": "@id"},    
+    "inputs": {"@id": "orchestration:inputs/", "@container": "@set"},    
+    "outputs": {"@id": "orchestration:outputs/", "@container": "@set"},
+    "url": "orchestration:url/",
+    "value": "orchestration:value/",
+    "from": {"@id": "orchestration:from/", "@type": "@id"},
+    "to": {"@id": "orchestration:to/", "@type": "@id"},
+    "fromPort": {"@id": "orchestration:fromPort/", "@type": "@id"},
+    "toPort": {"@id": "orchestration:toPort/", "@type": "@id"},
+    "WFS": "type:wfs",
+    "WPS": "type:wps",
+    "Literal": "type:literal"
+  },
+  "@type": "flow",
+  "tasks": [
+    {"@id":"task:0", "name": "Rivers", "type": "WFS", "inputs": [], "outputs": ["rivers"], "url": "http://localhost:3001/wfs/rivers/nl.top10nl.111016252"},
+    {"@id":"task:1", "name": "Literal", "type": "Literal", "inputs": [], "outputs": ["literal"], "value": 1000},
+    {"@id":"task:2", "name": "Buffer", "type": "WPS", "inputs": ["features","distance","unit"], "outputs": ["buffered"], "url": "http://localhost:3000/wps/buffer/jobs"},
+    {"@id":"task:3", "name": "Buildings", "type": "WFS", "inputs": [], "outputs": ["buildings"], "url": "http://localhost:3001/wfs/buildings?bbox=5.902,51.949,5.947,51.984"},
+    {"@id":"task:4", "name": "Intersects", "type": "WPS", "inputs": ["filter","features"], "outputs": ["passed", "failed"], "url": "http://localhost:3000/wps/intersects/jobs"},
+    {"@id":"task:5", "name": "Emergency Buildings", "type": "WFS", "inputs": [], "outputs": ["emergency"], "url": "http://localhost:3001/wfs/emergency"},
+    {"@id":"task:6", "name": "Intersects", "type": "WPS", "inputs": ["filter","features"], "outputs": ["passed", "failed"], "url": "http://localhost:3000/wps/intersects/jobs"},    
+    {"@id":"task:7", "name": "BBOX", "type": "WPS", "inputs": ["features"], "outputs": ["bbox"], "url": "http://localhost:3000/wps/bbox/jobs"},    
+    {"@id":"task:8", "name": "Voronoi", "type": "WPS", "inputs": ["bbox","features"], "outputs": ["voronoi"], "url": "http://localhost:3000/wps/voronoi/jobs"},    
+    {"@id":"task:9", "name": "AggregateCount", "type": "WPS", "inputs": ["reference","features"], "outputs": ["aggregate"], "url": "http://localhost:3000/wps/aggregatecount/jobs"}
+  ],
+  "sequenceFlows": [
+    {"from": "task:0", "to": "task:2", "fromPort": "rivers", "toPort": "features"},
+    {"from": "task:1", "to": "task:2", "fromPort": "literal", "toPort": "distance"},
+    {"from": "task:3", "to": "task:4", "fromPort": "buildings", "toPort": "features"},
+    {"from": "task:2", "to": "task:4", "fromPort": "buffered", "toPort": "filter"},
+    {"from": "task:5", "to": "task:6", "fromPort": "emergency", "toPort": "features"},
+    {"from": "task:2", "to": "task:6", "fromPort": "buffered", "toPort": "filter"},
+    {"from": "task:2", "to": "task:7", "fromPort": "buffered", "toPort": "features"},
+    {"from": "task:6", "to": "task:8", "fromPort": "failed", "toPort": "features"},
+    {"from": "task:7", "to": "task:8", "fromPort": "bbox", "toPort": "bbox"},
+    {"from": "task:8", "to": "task:9", "fromPort": "voronoi", "toPort": "reference"},
+    {"from": "task:4", "to": "task:9", "fromPort": "passed", "toPort": "features"}
+  ]
+}
+

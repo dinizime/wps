@@ -1,0 +1,72 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://json-schema.org/jsonld/inputAggregateCount.json#",
+    "title": "Input Aggregate Count",
+    "description": "Schema of input for Aggregate Count operation",
+    "type": "object",
+    "properties": {
+        "reference": { 
+			"oneOf": [
+				{ "allOf": [
+					{
+                        "type": "object",         
+						"properties": {
+							"features": {
+                                "type": "array",
+                                "items": {
+                                	"oneOf": [
+                                		{
+		                                    "properties": {
+		                                        "geometry": {"$ref": "http://json-schema.org/geojsonld/geometry/polygon.json#"}
+		                                    },
+								            "required": ["geometry"]
+                                			},
+                                		{
+		                                    "properties": {
+		                                        "geometry": {"$ref": "http://json-schema.org/geojsonld/geometry/multipolygon.json#"}
+		                                    },
+								            "required": ["geometry"]                                			
+                                		}
+                                	]
+                                }
+                            }
+						},
+                        "required": ["features"]
+					},
+					{"$ref": "http://json-schema.org/geojsonld/geojsonld.json#"}
+				]
+				},						
+				{ "allOf": [
+					{
+                        "type": "object",
+                                	"oneOf": [
+                                		{
+		                                    "properties": {
+		                                        "geometry": {"$ref": "http://json-schema.org/geojsonld/geometry/polygon.json#"}
+		                                    },
+								            "required": ["geometry"]
+                                			},
+                                		{
+		                                    "properties": {
+		                                        "geometry": {"$ref": "http://json-schema.org/geojsonld/geometry/multipolygon.json#"}
+		                                    },
+								            "required": ["geometry"]                                			
+                                		}
+                                	]
+					},
+					{"$ref": "http://json-schema.org/geojsonld/geojsonld.json#"}
+				]
+				},	
+				{"type": "string", "format": "uri" }
+			]
+		},
+        "features": { 
+			"oneOf": [
+				{"$ref": "http://json-schema.org/geojsonld/geojsonld.json#" },
+				{"type": "string",
+				 	"format": "uri" }
+			]
+		}
+    },
+    "required": [ "reference","features"]
+}

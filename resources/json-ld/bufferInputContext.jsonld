@@ -1,0 +1,7 @@
+{
+    "wps": "http://example.com/wps/",
+    "input": "wps:input",
+    "features": "wps:features",
+    "distance": "wps:distance",
+    "unit": "wps:unit"
+}

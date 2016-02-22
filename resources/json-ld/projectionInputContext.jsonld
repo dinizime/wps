@@ -1,0 +1,6 @@
+{
+    "wps": "http://example.com/wps/",
+    "input": "wps:input",
+    "features": "wps:features",
+    "crs": "wps:crs"
+}

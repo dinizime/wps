@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://json-schema.org/jsonld/inputIntersects.json#",
+    "title": "Input Intersecs",
+    "description": "Schema of input for Intersects operation",
+    "type": "object",
+    "properties": {
+        "filter": { 
+			"oneOf": [
+				{"$ref": "http://json-schema.org/geojsonld/geojsonld.json#" },
+				{"type": "string",
+				 	"format": "uri" }
+			]
+		},
+        "features": { 
+			"oneOf": [
+				{"$ref": "http://json-schema.org/geojsonld/geojsonld.json#" },
+				{"type": "string",
+				 	"format": "uri" }
+			]
+		}
+    },
+    "required": [ "filter","features"]
+}

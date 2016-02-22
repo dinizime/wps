@@ -1,0 +1,5 @@
+{
+    "wps": "http://example.com/wps/",
+    "outputList": "wps:outputList",
+    "bbox": "wps:bbox"
+}

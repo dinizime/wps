@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://json-schema.org/jsonld/inputVoronoi.json#",
+    "title": "Input Voronoi",
+    "description": "Schema of input for Voronoi operation",
+    "type": "object",
+    "properties": {
+        "features": { 
+			"oneOf": [
+				{ "allOf": [
+					{
+                        "type": "object",         
+						"properties": {
+							"features": {
+                                "type": "array",
+                                "items": {
+                                    "properties": {
+                                        "geometry": {"$ref": "http://json-schema.org/geojsonld/geometry/point.json#"}
+                                    },
+						            "required": ["geometry"]
+                                }
+                            }
+						},
+                        "required": ["features"]
+					},
+					{"$ref": "http://json-schema.org/geojsonld/geojsonld.json#" }
+				]
+				},						
+				{"type": "string", "format": "uri" }
+			]
+		},
+        "bbox": { 
+			"oneOf": [
+                {"type": "object",
+                 "properties": {
+                     "bbox": {"type": "array",
+                                "items": {
+                                    "type": "number"
+                                },
+                                "minItems": 4,
+                                "maxItems": 4
+                             }
+                 },
+                 "required": ["bbox"]
+                },
+				{"type": "string",
+				 	"format": "uri" }
+			]
+		}
+    },
+    "required": [ "features","bbox"]
+}

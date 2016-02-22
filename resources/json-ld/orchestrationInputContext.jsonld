@@ -1,0 +1,5 @@
+{
+    "wps": "http://example.com/wps/",
+    "input": "wps:input",
+    "flow": "wps:flow"
+}

@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://json-schema.org/jsonld/inputBuffer.json#",
+    "title": "Input Buffer",
+    "description": "Schema of input for Buffer operation",
+    "type": "object",
+    "properties": {
+        "features": { 
+			"oneOf": [
+				{"$ref": "http://json-schema.org/geojsonld/geojsonld.json#" },
+				{"type": "string",
+				 	"format": "uri" }
+			]
+		},
+        "distance": { 
+			"oneOf": [
+				{"type": "number" },
+				{"type": "string",
+				 	"format": "uri" }
+			]
+		},
+        "unit": {
+			"oneOf": [
+				{"enum": ["miles","feet","kilometers","meters","degrees"]},
+				{"type": "string",
+				 "format": "uri" }
+			]
+		}
+    },
+    "required": [ "features","distance"]
+}

@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://json-schema.org/jsonld/inputProjection.json#",
+    "title": "Input Projection",
+    "description": "Schema of input for Projection operation",
+    "type": "object",
+    "properties": {
+        "features": { 
+			"oneOf": [
+				{"$ref": "http://json-schema.org/geojsonld/geojsonld.json#" },
+				{"type": "string",
+				 	"format": "uri" }
+			]
+		},
+        "crs": { 
+			"type": "string",
+			"format": "uri" 
+		}
+    },
+    "required": [ "features","crs"]
+}

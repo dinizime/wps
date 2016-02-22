@@ -1,0 +1,128 @@
+{
+	"baseURL": "http://localhost:3000/",
+	"port": 3000,
+	"localMongo": "mongodb://localhost:27017/wps",
+	"capabilities": "../resources/json-ld/capabilitiesWPS.jsonld",
+	"jobContext": "../resources/json-ld/jobContext.jsonld",
+	"processes": {
+		"buffer": {
+			"inputContext": "../resources/json-ld/bufferInputContext.jsonld",
+			"outputContext": "../resources/json-ld/bufferOutputContext.jsonld",
+			"schemaLocation": "../resources/jsonSchema/inputBuffer.json",
+			"schemaName": "http://json-schema.org/jsonld/inputBuffer.json#",
+			"contentType": "application/ld+json",
+			"inputs": [
+				{"name": "features",
+				 "mediaType": "application/ext.geo+json"},
+				{"name": "distance",
+				 "mediaType": "text/plain"},
+				{"name": "unit",
+				 "mediaType": "text/plain",
+				 "optional": true,
+				 "default": "meters"}
+			],
+			"outputs": [
+				{"name": "buffered",
+				 "formats": ["text/html", "application/ext.geo+json"]}
+			]
+		},
+		"aggregatecount": {
+			"inputContext": "../resources/json-ld/aggregateInputContext.jsonld",			
+			"outputContext": "../resources/json-ld/aggregateOutputContext.jsonld",			
+			"schemaLocation": "../resources/jsonSchema/inputAggregateCount.json",
+			"schemaName": "http://json-schema.org/jsonld/inputAggregateCount.json#",
+			"contentType": "application/ld+json",
+			"inputs": [
+				{"name": "reference",
+				 "mediaType": "application/ext.geo+json"},
+				{"name": "features",
+				 "mediaType": "application/ext.geo+json"}
+			],
+			"outputs": [
+				{"name": "aggregate",
+				 "formats": ["text/html", "application/ext.geo+json"]}
+			]
+		},
+		"intersects": {
+			"inputContext": "../resources/json-ld/intersectsInputContext.jsonld",			
+			"outputContext": "../resources/json-ld/intersectsOutputContext.jsonld",			
+			"schemaLocation": "../resources/jsonSchema/inputIntersects.json",
+			"schemaName": "http://json-schema.org/jsonld/inputIntersects.json#",
+			"contentType": "application/ld+json",
+			"inputs": [
+				{"name": "filter",
+				 "mediaType": "application/ext.geo+json"},
+				{"name": "features",
+				 "mediaType": "application/ext.geo+json"}
+			],
+			"outputs": [
+				{"name": "passed",
+				 "formats": ["text/html", "application/ext.geo+json"]},
+				{"name": "failed",
+				 "formats": ["text/html", "application/ext.geo+json"]}
+			]
+		},
+		"bbox": {
+			"inputContext": "../resources/json-ld/bboxInputContext.jsonld",			
+			"outputContext": "../resources/json-ld/bboxOutputContext.jsonld",			
+			"schemaLocation": "../resources/jsonSchema/inputBBOX.json",
+			"schemaName": "http://json-schema.org/jsonld/inputBBOX.json#",
+			"contentType": "application/ld+json",
+			"inputs": [
+				{"name": "features",
+				 "mediaType": "application/ext.geo+json"}
+			],
+			"outputs": [
+				{"name": "bbox",
+				 "formats": ["application/ld+json"]}
+			]
+		},
+		"voronoi": {
+			"inputContext": "../resources/json-ld/voronoiInputContext.jsonld",			
+			"outputContext": "../resources/json-ld/voronoiOutputContext.jsonld",			
+			"schemaLocation": "../resources/jsonSchema/inputVoronoi.json",
+			"schemaName": "http://json-schema.org/jsonld/inputVoronoi.json#",
+			"contentType": "application/ld+json",
+			"inputs": [
+				{"name": "features",
+				 "mediaType": "application/ext.geo+json"},
+				{"name": "bbox",
+				 "mediaType": "application/ld+json"}
+			],
+			"outputs": [
+				{"name": "voronoi",
+				 "formats": ["text/html", "application/ext.geo+json"]}
+			]			
+		},
+		"orchestration": {
+			"inputContext": "../resources/json-ld/orchestrationInputContext.jsonld",			
+			"outputContext": "../resources/json-ld/orchestrationOutputContext.jsonld",			
+			"schemaLocation": "../resources/jsonSchema/inputOrchestration.json",
+			"schemaName": "http://json-schema.org/jsonld/inputOrchestration.json#",
+			"contentType": "application/ld+json",
+			"inputs": [
+				{"name": "flow",
+				 "mediaType": "application/ld+json"}
+			],
+			"outputs": [
+				{"name": "results",
+				 "formats": ["application/ld+json"]}
+			]		
+		},
+		"verify": {
+			"inputContext": "../resources/json-ld/verifyInputContext.jsonld",			
+			"outputContext": "../resources/json-ld/verifyOutputContext.jsonld",			
+			"schemaLocation": "../resources/jsonSchema/inputVerify.json",
+			"schemaName": "http://json-schema.org/jsonld/inputVerify.json#",
+			"contentType": "application/ld+json",
+			"inputs": [
+				{"name": "flow",
+				 "mediaType": "application/ld+json"}
+			],
+			"outputs": [
+				{"name": "results",
+				 "formats": ["application/ld+json"]}
+			]		
+		}
+	}
+}
