@@ -2,7 +2,15 @@ WPS.js
 ======
 A simple implementation of a RESTful JSON-oriented Web Processing Service (WPS) using Node.js
 
-Data is stored in a MongoDB. Config.json is used to configure the application.
+Data is stored in a MongoDB. [Config.json](https://github.com/dinizime/wpsjs/blob/master/config.json) is used to configure the application.
+
+##Executing Service
+
+After configuring the [Config.json](https://github.com/dinizime/wpsjs/blob/master/config.json) file the service can be started by using [Nodemon](https://github.com/remy/nodemon), and executing the command:
+
+```
+nodemon bin/wwww
+```
 
 ## Dependencies
 * [Node.js](https://nodejs.org/en/)
