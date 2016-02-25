@@ -27,6 +27,7 @@ nodemon bin/wwww
 * [async](https://github.com/caolan/async) - MIT License 
 * [jsts](https://github.com/bjornharrtell/jsts) - MIT / BSD-3-Clause / EPL-1.0
 * [node-uuid](https://github.com/broofa/node-uuid) - MIT License
+* [Socket.io](http://socket.io/) - MIT License
 * [request](https://github.com/request/request) - Apache License 
 * [strongly-connected-components](https://github.com/mikolalysenko/strongly-connected-components) - MIT License
 * [thenBy.js](https://github.com/Teun/thenBy.js) - Apache License 
